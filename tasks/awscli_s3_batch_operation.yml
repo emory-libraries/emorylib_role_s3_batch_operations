@@ -6,7 +6,7 @@
     {{ (item.priority is defined) | ternary (priority, '') }} {{ (item.description is defined) | ternary (description, '') }} --no-confirmation-required
   vars:
     priority: '--priority {{ item.priority }}'
-    description: '--description {{ item.description }}'
+    description: '--description {{ item.description | quote }}'
   loop: '{{ s3_batch_operations }}'
 
   
