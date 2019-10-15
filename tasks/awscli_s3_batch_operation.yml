@@ -8,5 +8,9 @@
     priority: '--priority {{ item.priority }}'
     description: '--description {{ item.description | quote }}'
   loop: '{{ s3_batch_operations }}'
+  register: batch_operation_result
+
+- debug:
+    msg: "{{ batch_operation_result | from_json }}"
 
   
