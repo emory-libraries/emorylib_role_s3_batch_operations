@@ -12,6 +12,6 @@
 
 - name: Display JobID repsonse
   debug:
-    msg: 'The job id is {{ batch_operation_fact.results[0].stdout.JobID | from_json }}'
+    msg: 'The job id is {{ batch_operation_fact.results[0].stdout | from_json }}'
 
   
