@@ -10,7 +10,8 @@
   loop: '{{ s3_batch_operations }}'
   register: batch_operation_fact
 
-- debug:
-    msg: "{{ batch_operation_fact.results[0].stdout | from_json }}"
+- name: Display JobID repsonse
+  debug:
+    msg: 'The job id is {{ batch_operation_fact.results[0].stdout.JobID | from_json }}'
 
   
