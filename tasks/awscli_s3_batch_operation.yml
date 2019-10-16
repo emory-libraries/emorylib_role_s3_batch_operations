@@ -11,6 +11,6 @@
   register: batch_operation_result
 
 - debug:
-    msg: "{{ batch_operation_result.stdout | from_json }}"
+    msg: "{{ batch_operation_result }}"
 
   
