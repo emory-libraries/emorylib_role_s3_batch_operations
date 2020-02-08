@@ -25,6 +25,7 @@
     that:
       - manifest.Location.Date.Key is defined
     fail_msg: 'The Date option requires a Key variable that is the S3 bucket path to where the manifest dates folders are'
+    quiet: yes
   loop: '{{ s3_batch_operations }}'
   when: manifest.Location.Date is defined
 
