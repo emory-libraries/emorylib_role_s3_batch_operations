@@ -1,0 +1,29 @@
+---
+- name: Check when Location date is defined
+  assert:
+    that:
+      - manifest.Location.ObjectArn is undefined
+      - manifest.Location.ETag is undefined
+    fail_msg: 'Date and ObjectArn/Etag are exclusive options, please remove one'
+  loop: '{{ s3_batch_operations }}'
+  when: manifest.Location.Date is defined
+
+- name: Check when Location ObjectArn/Etag is defined
+  assert:
+    that:
+      - manifest.Location.Date is undefined
+    fail_msg: 'Date and ObjectArn/Etag are exclusive options, please remove one'
+  loop: '{{ s3_batch_operations }}'
+  when: manifest.Location.ObjectArn is defined or manifest.Location.ETag is defined
+
+- name: Check when latest date is defined
+  assert:
+    that:
+      - manifest.Location.Date.Day is undefined
+      - manifest.Location.Date.Month is undefined
+      - manifest.Location.Date.Year is undefined
+    fail_msg: 'Latest and Day/Month/Year are exclusive options, please remove one'
+  loop: '{{ s3_batch_operations }}'
+  when: manifest.Location.Date.Latest is defined
+
+- pause:
