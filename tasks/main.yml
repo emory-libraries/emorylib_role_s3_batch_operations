@@ -7,7 +7,9 @@
     apply:
       vars:
         manifest: '{{ item.manifest | d (s3_batch_operation.manifest) }}'
-        
+      tags: s3-batch-op
+  tags: s3-batch-op
+
 - name: Include tasks to create s3 batch operations
   include_tasks: 
     file: awscli_s3_batch_operation.yml
