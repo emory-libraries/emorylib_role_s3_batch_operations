@@ -5,7 +5,7 @@
     prefix: '{{ key.split("/")[1:] | join("/") }}'
     mode: list
   vars:
-    key: '{{ manifest.Location.Key }}'
+    key: '{{ manifest.Location.Date.Key }}'
   loop: '{{ s3_batch_operations }}'
   register: list_keys
   when: manifest.Location.Date is defined
