@@ -8,7 +8,7 @@
     key: '{{ manifest.Location.Key }}'
   loop: '{{ s3_batch_operations }}'
   register: list_keys
-  when: item.Location.Date is defined
+  when: manifest.Location.Date is defined
 
 - debug:
     var: list_keys
