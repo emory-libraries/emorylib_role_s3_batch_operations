@@ -37,5 +37,3 @@
     quiet: yes
   loop: '{{ s3_batch_operations }}'
   when: manifest.Location.ObjectArn is defined or manifest.Location.ETag is defined
-
-- pause:

@@ -1,0 +1,18 @@
+---
+- set_fact:
+    test: cor-devops-binaries/fedora-cor-test-binaries/manifest/2020-02-06T00-00Z/manifest.json
+
+- debug:
+    var: test.split('/')[0]
+
+- pause:
+
+#- name: List objects in Location Key
+#  aws_s3:
+#    bucket: '{{ item.bucket_name | d (sc_restore_bucket) }}'
+#    prefix: '{{ item.bucket_prefix | d (sc_restore_bucket_prefix) | d (omit) }}'
+#    mode: list
+#  loop: '{{ s3_batch_operations }}'
+#  when: item.Location.Date is defined
+
+- pause:

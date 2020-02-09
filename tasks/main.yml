@@ -10,6 +10,13 @@
       tags: s3-batch-op
   tags: s3-batch-op
 
+- name: Include tasks to get ObjectArn and Etag from date
+  include_tasks:
+    file: get-objectarn-etag.yml
+    apply:
+      tags: s3-batch-op
+  tags: s3-batch-op
+
 - name: Include tasks to create s3 batch operations
   include_tasks: 
     file: awscli_s3_batch_operation.yml
