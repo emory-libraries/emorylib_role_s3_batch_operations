@@ -15,7 +15,7 @@
     file: get-objectarn-etag.yml
     apply:
       vars:
-        manifest: '{{ item.manifest | d (s3_batch_operation.manifest) }}'
+        manifest: '{{ item.manifest | d (s3_batch_operation.manifest) | regex_replace("^/") }}'
       tags: s3-batch-op
   tags: s3-batch-op
 
