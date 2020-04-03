@@ -38,7 +38,7 @@
   when: location_date_input != 'latest'
   loop: '{{ _s3_batch_operations }}'
   vars:
-    location_date_input: '{{ item.location.Date | lower | d () }}'
+    location_date_input: '{{ item.location.Date | d () | lower }}'
 
 - name: Get checksum values as string
   aws_s3:
