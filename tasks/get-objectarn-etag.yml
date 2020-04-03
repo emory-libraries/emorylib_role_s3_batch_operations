@@ -35,7 +35,9 @@
       - item.json_key
     quiet: yes
     fail_msg: 'No matching key was found in S3 for the given date, please check the KeyPrefix or date.'
-  when: location_date_input != 'latest'
+  when: 
+    - location_date_input != 'latest'
+    - item.manifest.Location is undefined
   loop: '{{ _s3_batch_operations }}'
   vars:
     location_date_input: '{{ item.location.Date | d () | lower }}'
