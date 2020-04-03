@@ -39,10 +39,10 @@
     quiet: yes
     fail_msg: 'No checksum was found for the given date'
   when: location_date_input != 'latest'
-  loop: '{{ s3_batch_operations }}'
+  loop: '{{ _s3_batch_operations }}'
   vars:
     location_date_input: '{{ item.location.Date | lower | d () }}'
-    
+
 - debug:
     var: _s3_batch_operations
 
