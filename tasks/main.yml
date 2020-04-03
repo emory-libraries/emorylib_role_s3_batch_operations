@@ -5,12 +5,10 @@
   include_tasks:
     file: error-check-input.yml
     apply:
-      vars:
-        manifest: '{{ item.manifest | d (s3_batch_operation.manifest) }}'
       tags: s3-batch-op
   tags: s3-batch-op
 
-- name: Include tasks to get ObjectArn and Etag from date
+- name: Include tasks to calculate ObjectArn and Etag from location.Date
   include_tasks:
     file: get-objectarn-etag.yml
     apply:

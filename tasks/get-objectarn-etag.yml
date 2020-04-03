@@ -1,14 +1,14 @@
 ---
-- name: List objects in Location Key
+- name: List objects in location KeyPrefix
   aws_s3:
     bucket: '{{ key.split("/")[0] }}'
     prefix: '{{ key.split("/")[1:] | join("/") }}'
     mode: list
   vars:
-    key: '{{ manifest.Location.Date.Key }}'
+    key: '{{ item.location.KeyPrefix }}'
   loop: '{{ s3_batch_operations }}'
   register: list_keys
-  when: manifest.Location.Date is defined
+  when: item.location is defined
 
 - debug:
     var: list_keys
@@ -20,19 +20,22 @@
       | select("contains", checksum_search) | list | last | d (False) }, {"json_key": item.1.s3_keys | d (False) 
       | select("contains", json_search) | list | last | d (False) })] }}
   vars:
-    checksum_search: '{{ manifest_conditional | ternary("manifest.checksum", checksum_full) }}'
-    checksum_full: '{{ manifest_string }}/manifest.checksum'
-    json_search: '{{ manifest_conditional | ternary("manifest.json", json_full) }}'
-    json_full: '{{ manifest_string }}/manifest.json'
+    checksum_search: '{{ location_is_latest | ternary("manifest.checksum", checksum_full) }}'
+    checksum_full: '{{ location_date_string }}/manifest.checksum'
+    json_search: '{{ location_is_latest | ternary("manifest.json", json_full) }}'
+    json_full: '{{ location_date_string }}/manifest.json'
+    location_date: '{{ item.location.Date | d () }}'
+    location_date_string: '{{ item.location.Date | d () }}T00-00Z'
+    location_date_input: '{{ item.location.Date | lower | d () }} '
+    location_is_latest: '{{ location_date_input == "latest" | d (False) }}'
     manifest: '{{ item.0.manifest | d (s3_batch_operation.manifest) }}'
-    manifest_conditional: '{{ manifest_date.Latest | d (False) }}'
-    manifest_date: '{{ manifest.Location.Date | d () }}'
-    manifest_string: '{{ manifest_date.Year | d () }}-{{ manifest_date.Month | d () }}-{{ manifest_date.Day | d () }}T00-00Z'
   loop: '{{ s3_batch_operations | zip(list_keys.results) | list }}'
 
 
 - debug:
     var: _s3_batch_operations
+
+- pause:
 
 - name: Get checksum values as string
   aws_s3:
