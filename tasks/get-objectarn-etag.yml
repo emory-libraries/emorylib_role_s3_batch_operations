@@ -53,14 +53,13 @@
   vars:
     key: '{{ item.location.KeyPrefix }}'
 
-- name: Create finalized version of input 
+- name: Create finalized input list 
   set_fact:
     __s3_batch_operations: |
       {{ __s3_batch_operations | d([]) + [item.0 | combine({"manifest": {"Location": {"ETag": item.1.contents | d (item.0.manifest.Location.ETag) | d () | trim,
       "ObjectArn": item.0.checksum_key | ternary(object_arn_string, item.0.manifest.Location.ObjectArn) }}}, recursive=True)] }}
   vars:
-    date: '{{ item.0.manifest.Location.Date | d () }}'
-    key: '{{ date.Key | d () }}'
+    key: '{{ item.0.location.KeyPrefix | d () }}'
     object_arn_string: 'arn:aws:s3:::{{ key.split("/")[0] }}/{{ item.0.json_key }}'
   loop: '{{ _s3_batch_operations | zip(checksum_values.results) | list }}'
 
