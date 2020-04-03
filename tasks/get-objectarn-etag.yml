@@ -10,9 +10,6 @@
   register: list_keys
   when: item.location is defined
 
-- debug:
-    var: list_keys
-
 - name: Create first placeholder list with associated keys
   set_fact:
     _s3_batch_operations: |
@@ -37,16 +34,11 @@
       - item.checksum_key
       - item.json_key
     quiet: yes
-    fail_msg: 'No checksum was found for the given date'
+    fail_msg: 'No matching key was found in S3 for the given date, please check the KeyPrefix or date.'
   when: location_date_input != 'latest'
   loop: '{{ _s3_batch_operations }}'
   vars:
     location_date_input: '{{ item.location.Date | lower | d () }}'
-
-- debug:
-    var: _s3_batch_operations
-
-- pause:
 
 - name: Get checksum values as string
   aws_s3:
