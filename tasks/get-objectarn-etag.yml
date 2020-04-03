@@ -22,7 +22,7 @@
     json_search: '{{ location_is_latest | ternary("manifest.json", json_full) }}'
     json_full: '{{ location_date_string }}/manifest.json'
     location: '{{ item.0.location | d () }}'
-    location_date: '{{ location.Date | lower | d () }}'
+    location_date: '{{ location.Date | d () | lower }}'
     location_date_string: '{{ location_date }}T00-00Z'
     location_is_latest: '{{ location_date == "latest" | d (False) }}'
     manifest: '{{ item.0.manifest | d (s3_batch_operation.manifest) }}'
