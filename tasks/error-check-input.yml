@@ -2,7 +2,7 @@
 - name: Assert that location and Location are exclusive (1st)
   assert:
     that:
-      - item.manifest.Location is undefined
+      - item.manifest.Location | d (False)
     fail_msg: 'location and manifest.Location are exclusive options, please remove one'
     quiet: yes
   loop: '{{ s3_batch_operations }}'
