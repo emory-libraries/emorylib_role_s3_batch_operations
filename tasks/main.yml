@@ -5,6 +5,8 @@
   include_tasks:
     file: error-check-input.yml
     apply:
+      vars:
+        manifest_location: '{{ item.manifest.Location | d (False) }}'
       tags: s3-batch-op
   tags: s3-batch-op
 
