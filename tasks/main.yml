@@ -25,3 +25,13 @@
         - s3-batch-op
   tags:
     - s3-batch-op
+
+- name: Include tasks to report job results
+  include_tasks:
+    file: report-job-results.yml
+    apply:
+      tags:
+        - s3-batch-op
+    tags:
+      - s3-batch-op
+  when: s3_batch_op_report_job

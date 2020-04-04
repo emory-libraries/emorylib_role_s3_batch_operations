@@ -1,0 +1,38 @@
+---
+- name: Gather job info via describe-job
+  shell: >
+    aws s3control describe-job
+    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }}
+    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
+    --job-id {{ job_id }}
+  register: describe_job
+  until: status == 'Completed' or status == 'Failed'
+  retries: '{{ describe_job_retries }}'
+  delay: '{{ describe_job_delay }}'
+  vars:
+    job: '{{ (describe_job.stdout | from_json).Job }}'
+    status: '{{ job["Status"] }}'
+  
+- name: Set fact for batch operation job
+  set_fact:
+    s3_batch_op_job: '{{ (describe_job.stdout | from_json).Job }}'
+
+- name: Build fail job report
+  set_fact:
+    fail_report: |
+      The s3 batch operation has failed. The following is from AWS:
+      {{ s3_batch_op_job["FailureReasons"] }}
+  when: s3_batch_op_job["Status"] == "Failed"
+
+- name: Build success job report
+  set_fact:
+    success_report: |
+      The S3 Batch Operation job has succeeded.
+      {{ s3_batch_op_job["ProgressSummary"] }}
+  when: s3_batch_op_job["Status"] == "Completed"
+      
+- name: Fail play if job fails
+  fail:
+    msg: '{{ fail_report | to_nice_yaml(indent=8, width=1337) }}'
+  when: s3_batch_op_job["Status"] == "Failed"
+  

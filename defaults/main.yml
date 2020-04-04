@@ -3,3 +3,5 @@
 
 describe_job_retries: 50
 describe_job_delay: 20
+
+s3_batch_op_report_job: true

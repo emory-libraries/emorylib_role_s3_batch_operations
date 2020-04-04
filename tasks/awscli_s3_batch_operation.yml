@@ -25,33 +25,8 @@
 - name: Set job_id
   set_fact:
     job_id: '{{ (batch_operation_fact.stdout | from_json).JobId }}'
-  
-- name: Describe job
-  shell: >
-    aws s3control describe-job
-    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }}
-    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
-    --job-id {{ job_id }}
-  register: describe_job
-  until: status == 'Completed' or status == 'Failed'
-  retries: '{{ describe_job_retries }}'
-  delay: '{{ describe_job_delay }}'
-  vars:
-    job: '{{ (describe_job.stdout | from_json).Job }}'
-    status: '{{ job["Status"] }}'
-  
-- name: Set batch operation job
-  set_fact:
-    s3_batch_op_job: '{{ (describe_job.stdout | from_json).Job }}'
 
-- name: Job failed
-  fail:
-    msg: |
-      The s3 batch operation failed. Reasons:
-      {{ s3_batch_op_job["FailureReasons"] }}
-  when: s3_batch_op_job["Status"] == "Failed"
-
-- debug:
-    var: s3_batch_op_job
-
-  
+- name: Display job ID
+  debug:
+    msg: 'The s3 batch operations job has been submitted, the Job ID is {{ job_id }}'
+  when: '{{ s3_batch_op_report_job }}'
