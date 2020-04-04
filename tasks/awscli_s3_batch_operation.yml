@@ -37,12 +37,12 @@
   retries: '{{ describe_job_retries }}'
   delay: '{{ describe_job_delay }}'
   vars:
-    job: '{{ (describe_job | from_json).Job }}'
+    job: '{{ (describe_job.stdout | from_json).Job }}'
     status: '{{ job["Status"] }}'
   
 - name: Set batch operation job
   set_fact:
-    s3_batch_op_job: '{{ (describe_job | from_json).Job }}'
+    s3_batch_op_job: '{{ (describe_job.stdout | from_json)}}'
 
 - debug:
     var: s3_batch_op_job
