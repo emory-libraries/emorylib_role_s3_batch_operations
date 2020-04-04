@@ -26,45 +26,40 @@
     location_is_latest: '{{ location_date == "latest" | d (False) }}'
     manifest: '{{ s3_batch_op.manifest }}'
 
-- debug:
-    var: _s3_batch_op
-- pause:
 - name: Assert that specified date is valid
   assert:
     that:
-      - item.checksum_key
-      - item.json_key
+      - _s3_batch_op.checksum_key
+      - _s3_batch_op.json_key
     quiet: yes
     fail_msg: 'No matching key was found in S3 for the given date, please check the KeyPrefix or date.'
   when: 
     - location_date_input != 'latest'
-    - item.manifest.Location is undefined
+    - _s3_batch_op.manifest.Location is undefined
   loop: '{{ _s3_batch_operations }}'
   vars:
-    location_date_input: '{{ item.location.Date | d () | lower }}'
+    location_date_input: '{{ _s3_batch_op.location.Date | d () | lower }}'
 
 - name: Get checksum values as string
   aws_s3:
     bucket: '{{ key.split("/")[0] }}'
-    object: '{{ item.checksum_key }}'
+    object: '{{ _s3_batch_op.checksum_key }}'
     mode: getstr
   register: checksum_values
-  loop: '{{ _s3_batch_operations }}'
-  when: item.checksum_key
+  when: _s3_batch_op.checksum_key
   vars:
-    key: '{{ item.location.KeyPrefix }}'
+    key: '{{ _s3_batch_op.location.KeyPrefix }}'
 
-- name: Create finalized input list 
+- name: Prep variable for submission to awscli 
   set_fact:
-    __s3_batch_operations: |
-      {{ __s3_batch_operations | d([]) + [item.0 | combine({"manifest": {"Location": {"ETag": item.1.contents | d (item.0.manifest.Location.ETag) | d () | trim,
-      "ObjectArn": item.0.checksum_key | ternary(object_arn_string, item.0.manifest.Location.ObjectArn) }}}, recursive=True)] }}
+    __s3_batch_op: |
+      {{ _s3_batch_op | combine ({"manifest": {"Location": {"ETag": checksum_values.contents | d (_s3_batch_op.manifest.Location.ETag) | d () | trim,
+      "ObjectArn": _s3_batch_op.checksum_key | ternary(object_arn_string, _s3_batch_op.manifest.Location.ObjectArn) }}}, recursive=True) }}
   vars:
-    key: '{{ item.0.location.KeyPrefix | d () }}'
-    object_arn_string: 'arn:aws:s3:::{{ key.split("/")[0] }}/{{ item.0.json_key }}'
-  loop: '{{ _s3_batch_operations | zip(checksum_values.results) | list }}'
+    key: '{{ _s3_batch_op.location.KeyPrefix | d () }}'
+    object_arn_string: 'arn:aws:s3:::{{ key.split("/")[0] }}/{{ _s3_batch_op.json_key }}'
 
 - debug:
-    var: __s3_batch_operations
+    var: __s3_batch_op
 
 - pause:
