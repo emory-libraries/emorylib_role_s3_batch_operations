@@ -14,7 +14,7 @@
     _s3_batch_op: |
       {{ s3_batch_op | combine({"checksum_key": list_keys.s3_keys | d (False) 
       | select("contains", checksum_search) | list | last | d (False) }, {"json_key": list_keys.s3_keys | d (False) 
-      | select("contains", json_search) | list | last | d (False) })] }}
+      | select("contains", json_search) | list | last | d (False) }) }}
   vars:
     checksum_search: '{{ location_is_latest | ternary("manifest.checksum", checksum_full) }}'
     checksum_full: '{{ location_date_string }}/manifest.checksum'
