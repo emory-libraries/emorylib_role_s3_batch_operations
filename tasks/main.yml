@@ -32,6 +32,6 @@
     apply:
       tags:
         - s3-batch-op
-    tags:
-      - s3-batch-op
+  tags:
+    - s3-batch-op
   when: s3_batch_op_report_job
