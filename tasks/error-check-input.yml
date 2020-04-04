@@ -2,17 +2,15 @@
 - name: Assert that location and Location are exclusive (1st)
   assert:
     that:
-      - item.manifest.Location is undefined
+      - s3_batch_op.manifest.Location is undefined
     fail_msg: 'location and manifest.Location are exclusive options, please remove one'
     quiet: yes
-  loop: '{{ s3_batch_operations }}'
-  when: item.location is defined
+  when: s3_batch_op.location is defined
 
 - name: Assert that location and Location are exclusive (2nd)
   assert:
     that:
-      - item.location is undefined
+      - s3_batch_op.location is undefined
     fail_msg: 'location and manifest.Location are exclusive options, please remove one'
     quiet: yes
-  loop: '{{ s3_batch_operations }}'
-  when: item.manifest.Location is defined
+  when: s3_batch_op.manifest.Location is defined

@@ -5,15 +5,18 @@
     prefix: '{{ key.split("/")[1:] | join("/") }}'
     mode: list
   vars:
-    key: '{{ item.location.KeyPrefix }}'
-  loop: '{{ s3_batch_operations }}'
+    key: '{{ s3_batch_op.location.KeyPrefix }}'
   register: list_keys
-  when: item.location is defined
+  when: s3_batch_op.location is defined
 
-- name: Create first placeholder list with associated keys
+- debug:
+   var: list_keys
+- pause:
+
+- name: Create first placeholder variable with associated keys
   set_fact:
-    _s3_batch_operations: |
-      {{ _s3_batch_operations | d([]) + [item.0 | combine({"checksum_key": item.1.s3_keys | d (False) 
+    _s3_batch_op: |
+      {{ s3_batch_op | combine({"checksum_key": item.1.s3_keys | d (False) 
       | select("contains", checksum_search) | list | last | d (False) }, {"json_key": item.1.s3_keys | d (False) 
       | select("contains", json_search) | list | last | d (False) })] }}
   vars:
