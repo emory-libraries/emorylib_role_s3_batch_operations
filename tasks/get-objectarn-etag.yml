@@ -9,28 +9,26 @@
   register: list_keys
   when: s3_batch_op.location is defined
 
-- debug:
-   var: list_keys
-- pause:
-
 - name: Create first placeholder variable with associated keys
   set_fact:
     _s3_batch_op: |
-      {{ s3_batch_op | combine({"checksum_key": item.1.s3_keys | d (False) 
-      | select("contains", checksum_search) | list | last | d (False) }, {"json_key": item.1.s3_keys | d (False) 
+      {{ s3_batch_op | combine({"checksum_key": list_keys.s3_keys | d (False) 
+      | select("contains", checksum_search) | list | last | d (False) }, {"json_key": list_keys.s3_keys | d (False) 
       | select("contains", json_search) | list | last | d (False) })] }}
   vars:
     checksum_search: '{{ location_is_latest | ternary("manifest.checksum", checksum_full) }}'
     checksum_full: '{{ location_date_string }}/manifest.checksum'
     json_search: '{{ location_is_latest | ternary("manifest.json", json_full) }}'
     json_full: '{{ location_date_string }}/manifest.json'
-    location: '{{ item.0.location | d () }}'
+    location: '{{ s3_batch_op.location | d () }}'
     location_date: '{{ location.Date | d () | lower }}'
     location_date_string: '{{ location_date }}T00-00Z'
     location_is_latest: '{{ location_date == "latest" | d (False) }}'
-    manifest: '{{ item.0.manifest | d (s3_batch_operation.manifest) }}'
-  loop: '{{ s3_batch_operations | zip(list_keys.results) | list }}'
+    manifest: '{{ s3_batch_op.manifest }}'
 
+- debug:
+    var: _s3_batch_op
+- pause:
 - name: Assert that specified date is valid
   assert:
     that:
