@@ -36,7 +36,6 @@
   when: 
     - location_date_input != 'latest'
     - _s3_batch_op.manifest.Location is undefined
-  loop: '{{ _s3_batch_operations }}'
   vars:
     location_date_input: '{{ _s3_batch_op.location.Date | d () | lower }}'
 
