@@ -1,12 +1,12 @@
 ---
-- name: Submit batch tagging via awscli
+- name: Submit s3 batch operation via awscli
   shell: >
-    aws s3control create-job 
-    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }} 
-    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }} 
-    --operation {{ __s3_batch_op.operation | to_json | quote }} 
-    --manifest {{ manifest }} 
-    --report {{ __s3_batch_op.report | to_json | quote }} 
+    aws s3control create-job
+    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }}
+    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
+    --operation {{ __s3_batch_op.operation | to_json | quote }}
+    --manifest {{ manifest }}
+    --report {{ __s3_batch_op.report | to_json | quote }}
     --role-arn {{ __s3_batch_op.role_arn | d (default_s3_batch_op_role_arn) }}
     {{ (tags_query != '') | ternary (tags, '') }}
     {{ (priority_query != '') | ternary (priority, '') }} 
