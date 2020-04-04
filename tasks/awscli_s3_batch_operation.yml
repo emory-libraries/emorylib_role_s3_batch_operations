@@ -42,7 +42,14 @@
   
 - name: Set batch operation job
   set_fact:
-    s3_batch_op_job: '{{ (describe_job.stdout | from_json)}}'
+    s3_batch_op_job: '{{ (describe_job.stdout | from_json).Job }}'
+
+- name: Job failed
+  fail:
+    msg: |
+      The s3 batch operation failed. Reasons:
+      {{ s3_batch_op_job["FailureReasons"] }}
+  when: s3_batch_op_job["Status"] == "Failed"
 
 - debug:
     var: s3_batch_op_job
