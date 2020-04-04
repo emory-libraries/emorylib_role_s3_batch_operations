@@ -57,8 +57,3 @@
   vars:
     key: '{{ _s3_batch_op.location.KeyPrefix | d () }}'
     object_arn_string: 'arn:aws:s3:::{{ key.split("/")[0] }}/{{ _s3_batch_op.json_key }}'
-
-- debug:
-    var: __s3_batch_op
-
-- pause:
