@@ -7,11 +7,14 @@
     --operation {{ __s3_batch_op.operation | to_json | quote }} 
     --manifest {{ manifest }} 
     --report {{ __s3_batch_op.report | to_json | quote }} 
-    --role-arn {{ __s3_batch_op.role_arn | d (default_s3_batch_op_role_arn) }} 
+    --role-arn {{ __s3_batch_op.role_arn | d (default_s3_batch_op_role_arn) }}
+    {{ (tags_query != '') | ternary (tags, '') }}
     {{ (priority_query != '') | ternary (priority, '') }} 
     {{ (description_query != '') | ternary (description, '') }} 
     --no-confirmation-required
   vars:
+    tags: '--tags {{ tags_query }}'
+    tags_query: '{{ __s3_batch_op | json_query("tags") | to_json }}'
     priority: '--priority {{ priority_query }}'
     priority_query: '{{ __s3_batch_op | json_query("priority") }}'
     description: '--description {{ description_query | quote }}'
