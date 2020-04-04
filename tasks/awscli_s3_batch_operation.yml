@@ -38,7 +38,7 @@
   delay: '{{ describe_job_delay }}'
   vars:
     job: '{{ (describe_job | from_json).Job }}'
-    status: '{{ job.Status }}'
+    status: '{{ job["Status"] }}'
   
 - name: Set batch operation job
   set_fact:
