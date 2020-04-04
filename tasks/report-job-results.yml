@@ -21,22 +21,22 @@
   set_fact:
     fail_report: |
       The s3 batch operation has failed. The following is from AWS:
-      {{ s3_batch_op_job["FailureReasons"] }}
+      {{ s3_batch_op_job["FailureReasons"] | to_nice_yaml(indent=8, width=1337) }}
   when: s3_batch_op_job["Status"] == "Failed"
 
 - name: Fail play if job fails
   fail:
-    msg: '{{ fail_report | to_nice_yaml(indent=8, width=1337) }}'
+    msg: '{{ fail_report.split("\n")[:-1] }}'
   when: s3_batch_op_job["Status"] == "Failed"
 
 - name: Build success job report
   set_fact:
     success_report: |
       The S3 Batch Operation job has succeeded.
-      {{ s3_batch_op_job["ProgressSummary"] }}
+      {{ s3_batch_op_job["ProgressSummary"] | to_nice_yaml(indent=8, width=1337) }}
   when: s3_batch_op_job["Status"] == "Complete"
 
 - name: Display success job report
   debug:
-    msg: '{{ success_report | to_nice_yaml(indent=8, width=1337) }}'
+    msg: '{{ success_report.split("\n")[:-1] }}'
   when: s3_batch_op_job["Status"] == "Complete"
