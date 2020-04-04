@@ -6,7 +6,9 @@
     --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
     --job-id {{ job_id }}
   register: describe_job
-  until: status != 'Active'
+  until: 
+    - status != 'Active'
+    - status != 'Ready'
   retries: '{{ describe_job_retries }}'
   delay: '{{ describe_job_delay }}'
   vars:
