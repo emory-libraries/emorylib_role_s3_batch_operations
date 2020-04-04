@@ -35,3 +35,8 @@
       The S3 Batch Operation job has succeeded.
       {{ s3_batch_op_job["ProgressSummary"] }}
   when: s3_batch_op_job["Status"] == "Complete"
+
+- name: Display success job report
+  debug:
+    msg: '{{ success_report | to_nice_yaml(indent=8, width=1337) }}'
+  when: s3_batch_op_job["Status"] == "Complete"
