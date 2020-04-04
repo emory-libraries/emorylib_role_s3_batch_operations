@@ -1,2 +1,5 @@
 ---
 # defaults file for emorylib_role_s3_batch_operations
+
+describe_job_retries: 50
+describe_job_delay: 20
