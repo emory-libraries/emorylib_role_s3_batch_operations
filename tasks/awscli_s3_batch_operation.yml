@@ -14,7 +14,7 @@
     --no-confirmation-required
   vars:
     tags: '--tags {{ tags_query }}'
-    tags_query: '{{ __s3_batch_op | json_query("tags") | to_json }}'
+    tags_query: '{{ __s3_batch_op | json_query("tags") }}'
     priority: '--priority {{ priority_query }}'
     priority_query: '{{ __s3_batch_op | json_query("priority") }}'
     description: '--description {{ description_query | quote }}'
