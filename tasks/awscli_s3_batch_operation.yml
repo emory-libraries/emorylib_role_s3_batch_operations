@@ -29,4 +29,4 @@
 - name: Display job ID
   debug:
     msg: 'The s3 batch operations job has been submitted, the Job ID is {{ job_id }}'
-  when: '{{ s3_batch_op_report_job }}'
+  when: not s3_batch_op_report_job
