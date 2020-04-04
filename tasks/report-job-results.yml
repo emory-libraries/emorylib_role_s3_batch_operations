@@ -26,7 +26,7 @@
 
 - name: Fail play if job fails
   fail:
-    msg: '{{ fail_report.split("\n")[:-1] }}'
+    msg: '{{ fail_report.split("\n") }}'
   when: s3_batch_op_job["Status"] == "Failed"
 
 - name: Build success job report
@@ -38,5 +38,5 @@
 
 - name: Display success job report
   debug:
-    msg: '{{ success_report.split("\n")[:-1] }}'
+    msg: '{{ success_report.split("\n") }}'
   when: s3_batch_op_job["Status"] == "Complete"
