@@ -21,7 +21,7 @@
 
 - name: Set fact direct download link
   set_fact:
-    report_direct_download_link: '{{ get_url.url }}'
+    report_direct_download_link: '{{ get_url.url | d (False) }}'
   when: get_url | d (False)
 
 - name: Generate Console link
