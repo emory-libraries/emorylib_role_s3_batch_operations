@@ -1,6 +1,13 @@
 ---
 # tasks file for emorylib_role_s3_batch_operations
 
+- include_tasks:
+    file: generate-report-download-link.yml
+    apply:
+      tags: s3-batch-op
+  tags: s3-batch-op
+- pause:
+
 - name: Include tasks to error check the input
   include_tasks:
     file: error-check-input.yml
