@@ -1,4 +1,14 @@
 ---
+
+- name:
+    debug:
+      msg: '{{ report_key | bool }}'
+    vars:
+      report_key: fedora-cor-arch-binaries/completion-report/job-8f25a41b-9792-4652-a00d-1a2ce556ce96/results/7ee0abc5656ec05983399483b9ef2c2e5e3b37a4.csv
+
+- pause:
+
+
 - name: Assert that location and Location are exclusive (1st)
   assert:
     that:
