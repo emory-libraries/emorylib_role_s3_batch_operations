@@ -1,17 +1,6 @@
 ---
 # tasks file for emorylib_role_s3_batch_operations
 
-- include_tasks:
-    file: generate-report-download-link.yml
-    apply:
-      tags: s3-batch-op
-      vars:
-        report_bucket: '{{ s3_batch_op_job.Report.Bucket.split(":")[-1] }}'
-        report_prefix: '{{ s3_batch_op_job.Report.Prefix }}'
-  when: s3_batch_op_generate_direct_download or s3_batch_op_generate_console_download
-  tags: s3-batch-op
-- pause:
-
 - name: Include tasks to error check the input
   include_tasks:
     file: error-check-input.yml
@@ -36,6 +25,16 @@
         - s3-batch-op
   tags:
     - s3-batch-op
+
+- include_tasks:
+    file: generate-report-download-link.yml
+    apply:
+      tags: s3-batch-op
+      vars:
+        report_bucket: '{{ s3_batch_op_job.Report.Bucket.split(":")[-1] }}'
+        report_prefix: '{{ s3_batch_op_job.Report.Prefix }}'
+  when: s3_batch_op_generate_direct_download or s3_batch_op_generate_console_download
+  tags: s3-batch-op
 
 - name: Include tasks to report job results
   include_tasks:

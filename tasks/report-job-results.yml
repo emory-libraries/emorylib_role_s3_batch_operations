@@ -20,8 +20,11 @@
 - name: Build fail job report
   set_fact:
     fail_report: |
-      The s3 batch operation has failed. The following is from AWS:
+      The s3 batch operation has failed. The failure reasons given by AWS:
       {{ s3_batch_op_job["FailureReasons"] | to_nice_yaml(indent=8, width=1337) }}
+      {{ s3_batch_op_generate_console_download | ternary (console_download, "" )}}
+  vars:
+    console_download: 
   when: s3_batch_op_job["Status"] == "Failed"
 
 - name: Fail play if job fails

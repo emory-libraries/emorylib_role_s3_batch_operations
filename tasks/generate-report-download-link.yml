@@ -1,12 +1,4 @@
 ---
-
-- name: Test out string split
-  debug: '{{ test_string.split(":")[-1] }}'
-  vars:
-    test_string: 'arn:aws:s3:::cor-s3-inventory-1'
-
-- pause:
-
 - name: List objects in report prefix
   aws_s3:
     bucket: '{{ report_bucket }}'
