@@ -10,7 +10,7 @@
 - set_fact:
     report_key: '{{ completion_report.s3_keys | d (False) | select("contains", job_id) | select ("contains", ".csv") | list | last | d ("none") }}'
   vars:
-    job_id: 8f25a41b-9792-4652-a00d-1a2ce556ce96
+    job_id: x8f25a41b-9792-4652-a00d-1a2ce556ce96
 
 - name:
   debug:
