@@ -40,8 +40,8 @@
   register: describe_job
   when: not s3_batch_op_submit_only
   until: status == 'Complete' or status == 'Failed'
-  retries: '{{ describe_job_retries }}'
-  delay: '{{ describe_job_delay }}'
+  retries: '{{ s3_batch_op_describe_job_retries }}'
+  delay: '{{ s3_batch_op_describe_job_delay }}'
   vars:
     job: '{{ (describe_job.stdout | from_json).Job }}'
     status: '{{ job["Status"] }}'
