@@ -14,3 +14,10 @@
     fail_msg: 'location and manifest.Location are exclusive options, please remove one'
     quiet: yes
   when: s3_batch_op.manifest.Location is defined
+
+- name: Assert that submit only is false when requesting report links
+  assert:
+    that: not s3_batch_op_submit_only
+    fail_msg: Requesting report links requires that s3_batch_op_submit_only be set to false. Please change and restart.
+    quiet: yes
+  when: s3_batch_op_generate_direct_download or s3_batch_op_generate_console_download

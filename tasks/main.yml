@@ -26,7 +26,8 @@
   tags:
     - s3-batch-op
 
-- include_tasks:
+- name: Include tasks to generate report download links
+  include_tasks:
     file: generate-report-download-link.yml
     apply:
       tags: s3-batch-op
@@ -44,4 +45,4 @@
         - s3-batch-op
   tags:
     - s3-batch-op
-  when: s3_batch_op_report_job
+  when: not s3_batch_op_submit_only

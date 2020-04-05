@@ -1,22 +1,4 @@
 ---
-- name: Gather job info via describe-job
-  shell: >
-    aws s3control describe-job
-    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }}
-    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
-    --job-id {{ job_id }}
-  register: describe_job
-  until: status == 'Complete' or status == 'Failed'
-  retries: '{{ describe_job_retries }}'
-  delay: '{{ describe_job_delay }}'
-  vars:
-    job: '{{ (describe_job.stdout | from_json).Job }}'
-    status: '{{ job["Status"] }}'
-  
-- name: Set fact for batch operation job
-  set_fact:
-    s3_batch_op_job: '{{ (describe_job.stdout | from_json).Job }}'
-
 - name: Build job reports
   set_fact:
     fail_report: |

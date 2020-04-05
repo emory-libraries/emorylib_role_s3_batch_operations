@@ -29,4 +29,24 @@
 - name: Display job ID
   debug:
     msg: 'The s3 batch operations job has been submitted, the Job ID is {{ job_id }}'
-  when: not s3_batch_op_report_job
+  when: s3_batch_op_submit_only
+
+- name: Gather job info via describe-job
+  shell: >
+    aws s3control describe-job
+    --region {{ __s3_batch_op.region | d (default_s3_batch_op_region) }}
+    --account-id {{ __s3_batch_op.account_id | d (default_s3_batch_op_account_id) }}
+    --job-id {{ job_id }}
+  register: describe_job
+  when: not s3_batch_op_submit_only
+  until: status == 'Complete' or status == 'Failed'
+  retries: '{{ describe_job_retries }}'
+  delay: '{{ describe_job_delay }}'
+  vars:
+    job: '{{ (describe_job.stdout | from_json).Job }}'
+    status: '{{ job["Status"] }}'
+  
+- name: Set fact for batch operation job
+  set_fact:
+    s3_batch_op_job: '{{ (describe_job.stdout | from_json).Job }}'
+  when: not s3_batch_op_submit_only
