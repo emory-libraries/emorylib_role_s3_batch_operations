@@ -16,7 +16,7 @@
     mode: geturl
   when:
     - s3_batch_op_generate_direct_download
-    - report_key
+    - report_key | bool
   register: get_url
 
 - name: Set fact direct download link
@@ -29,4 +29,4 @@
     report_console_download_link: '{{ s3_batch_op_console_base_url }}/{{ report_bucket }}/{{ report_key }}'
   when:
     - s3_batch_op_generate_console_download
-    - report_key
+    - report_key | bool

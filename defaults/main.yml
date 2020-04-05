@@ -10,5 +10,4 @@ s3_batch_op_describe_job_retries: 50
 s3_batch_op_describe_job_delay: 20
 
 
-
 s3_batch_op_console_base_url: https://s3.console.aws.amazon.com/s3/object
