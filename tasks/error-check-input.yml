@@ -1,10 +1,22 @@
 ---
 
+- name: List objects in report prefix
+  aws_s3:
+    bucket: cor-s3-inventory-1
+    prefix: fedora-cor-arch-binaries/completion-report/
+    mode: list
+  register: completion_report
+
+- set_fact:
+    report_key: '{{ completion_report.s3_keys | d (False) | select("contains", job_id) | select ("contains", ".csv") | list | last | d ("none") }}'
+  vars:
+    job_id: 8f25a41b-9792-4652-a00d-1a2ce556ce96
+
 - name:
   debug:
-    msg: '{{ report_key | bool }}'
-  vars:
-    report_key: fedora-cor-arch-binaries/completion-report/job-8f25a41b-9792-4652-a00d-1a2ce556ce96/results/7ee0abc5656ec05983399483b9ef2c2e5e3b37a4.csv
+    msg: '{{ report_key }}'
+  #vars:
+  #  report_key: fedora-cor-arch-binaries/completion-report/job-8f25a41b-9792-4652-a00d-1a2ce556ce96/results/7ee0abc5656ec05983399483b9ef2c2e5e3b37a4.csv
 
 - pause:
 

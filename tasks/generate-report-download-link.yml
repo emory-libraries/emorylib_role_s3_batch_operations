@@ -7,7 +7,7 @@
   register: completion_report
 
 - set_fact:
-    report_key: '{{ completion_report.s3_keys | d (False) | select("contains", job_id) | select ("contains", ".csv") | list | last | d (False) }}'
+    report_key: '{{ completion_report.s3_keys | d (False) | select("contains", job_id) | select ("contains", ".csv") | list | last | d ("none") }}'
 
 - name: Generate direct download link for report
   aws_s3:
@@ -16,7 +16,7 @@
     mode: geturl
   when:
     - s3_batch_op_generate_direct_download
-    - report_key | bool
+    - report_key != 'none'
   register: get_url
 
 - name: Set fact direct download link
@@ -29,4 +29,4 @@
     report_console_download_link: '{{ s3_batch_op_console_base_url }}/{{ report_bucket }}/{{ report_key }}'
   when:
     - s3_batch_op_generate_console_download
-    - report_key | bool
+    - report_key != 'none'
