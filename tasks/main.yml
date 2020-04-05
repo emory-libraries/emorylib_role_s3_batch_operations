@@ -5,9 +5,9 @@
     file: generate-report-download-link.yml
     apply:
       tags: s3-batch-op
-    vars:
-      report_bucket: '{{ s3_batch_op_job.Report.Bucket.split(":")[-1] }}'
-      report_prefix: '{{ s3_batch_op_job.Report.Prefix }}'
+      vars:
+        report_bucket: '{{ s3_batch_op_job.Report.Bucket.split(":")[-1] }}'
+        report_prefix: '{{ s3_batch_op_job.Report.Prefix }}'
   when: s3_batch_op_generate_direct_download or s3_batch_op_generate_console_download
   tags: s3-batch-op
 - pause:
