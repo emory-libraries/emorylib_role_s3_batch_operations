@@ -13,7 +13,7 @@
     link_names: '{{ s3_batch_op_slack_link_names | d (omit) }}'
     parse: '{{ s3_batch_op_slack_parse | d (omit) }}'
   vars:
-    optional_variable: Optional Variable Exists
+    optional_variable: none
     required_variable: Required Variable is Required
 
 - pause: 
