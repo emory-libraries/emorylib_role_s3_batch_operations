@@ -1,5 +1,22 @@
 ---
 # tasks file for emorylib_role_s3_batch_operations
+
+- name: Include tasks to error check the input
+  include_tasks:
+    file: error-check-input.yml
+    apply:
+      tags: s3-batch-op
+  tags: s3-batch-op
+
+- name: Include tasks to calculate ObjectArn and Etag from location.Date
+  include_tasks:
+    file: get-objectarn-etag.yml
+    apply:
+      vars:
+        manifest: '{{ item.manifest | d (s3_batch_operation.manifest) | regex_replace("^/") }}'
+      tags: s3-batch-op
+  tags: s3-batch-op
+
 - name: Include tasks to create s3 batch operations
   include_tasks: 
     file: awscli_s3_batch_operation.yml
@@ -8,3 +25,24 @@
         - s3-batch-op
   tags:
     - s3-batch-op
+
+- name: Include tasks to generate report download links
+  include_tasks:
+    file: generate-report-download-link.yml
+    apply:
+      tags: s3-batch-op
+      vars:
+        report_bucket: '{{ s3_batch_op_job.Report.Bucket.split(":")[-1] }}'
+        report_prefix: '{{ s3_batch_op_job.Report.Prefix }}'
+  when: s3_batch_op_generate_direct_download or s3_batch_op_generate_console_download
+  tags: s3-batch-op
+
+- name: Include tasks to report job results
+  include_tasks:
+    file: report-job-results.yml
+    apply:
+      tags:
+        - s3-batch-op
+  tags:
+    - s3-batch-op
+  when: not s3_batch_op_submit_only
